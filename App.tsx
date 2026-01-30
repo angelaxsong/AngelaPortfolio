@@ -25,9 +25,9 @@ const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen w-full select-none bg-[#0047FF]">
-      {/* 3D Background layer - stays fixed or scrolls slightly */}
+      {/* 3D Background layer */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 8], fov: 40 }} dpr={[1, 2]}>
+        <Canvas camera={{ position: [0, 0, 10], fov: 35 }} dpr={[1, 2]}>
           <Suspense fallback={null}>
             <Scene mousePos={mousePos} />
           </Suspense>
@@ -35,19 +35,21 @@ const App: React.FC = () => {
       </div>
 
       {/* UI Overlay */}
-      <div className="relative z-10 flex flex-col px-6 md:px-12 py-8">
+      <div className="relative z-10 flex flex-col px-6 md:px-12">
         <Navbar onToggleMenu={() => setIsMenuOpen(!isMenuOpen)} />
         
-        <main className="flex flex-col">
-          {/* New Hero Section occupying large screen real estate */}
+        <main className="flex flex-col pt-24">
           <Hero />
 
           {/* Project Section */}
-          <section className="mt-20 md:mt-32 pb-20">
-            <div className="mb-12">
-              <h2 className="pixel-font text-4xl md:text-7xl uppercase leading-tight tracking-tighter">
-                Latest Projects <span className="inline-block transform rotate-45">↓</span>
+          <section className="mt-32 pb-32">
+            <div className="mb-16 flex items-end justify-between border-b border-white/20 pb-4">
+              <h2 className="pixel-font text-5xl md:text-8xl uppercase leading-tight tracking-tighter">
+                WORK <span className="text-[0.4em] font-sans align-middle opacity-30 font-bold ml-4 tracking-[0.2em]">[2023-2025]</span>
               </h2>
+              <div className="text-[10px] font-bold opacity-40 uppercase tracking-[0.3em] hidden md:block">
+                Curated Selection of 3D Experiments
+              </div>
             </div>
             <ProjectList />
           </section>

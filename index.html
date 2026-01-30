@@ -4,58 +4,72 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DVERSO STUDIO | Immersive 3D Experiences</title>
+    <title>DVERSO STUDIO | Creative Technology & 3D Experiences</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
     <style>
-      @font-face {
-        font-family: 'DversoPixel';
-        src: url('https://fonts.gstatic.com/s/silkscreen/v1/m8JVjfN9-XvO_S1B11C9.woff2') format('woff2');
+      :root {
+        --dverso-blue: #0047FF;
       }
       body {
         margin: 0;
-        background-color: #0047FF;
+        background-color: var(--dverso-blue);
         color: white;
         font-family: 'JetBrains Mono', monospace;
         overflow-x: hidden;
         cursor: crosshair;
+        -webkit-font-smoothing: antialiased;
       }
       .pixel-font {
         font-family: 'Silkscreen', cursive;
+        letter-spacing: -0.05em;
       }
       .stroke-text {
         -webkit-text-fill-color: transparent;
         -webkit-text-stroke-width: 1px;
-        -webkit-text-stroke-color: white;
+        -webkit-text-stroke-color: rgba(255, 255, 255, 0.8);
+      }
+      /* Noise Overlay */
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+        opacity: 0.05;
+        pointer-events: none;
+        z-index: 9999;
+      }
+      .scanline {
+        width: 100%;
+        height: 100px;
+        z-index: 5;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+        opacity: 0.1;
+        position: fixed;
+        bottom: 100%;
+        animation: scanline 8s linear infinite;
+      }
+      @keyframes scanline {
+        0% { bottom: 100%; }
+        100% { bottom: -100px; }
       }
       ::-webkit-scrollbar {
-        width: 0px;
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
         background: transparent;
       }
-      .project-row {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s ease;
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
       }
-      .project-row:hover {
-        background: rgba(255, 255, 255, 0.1);
-        padding-left: 1rem;
-      }
-      .marquee-container {
-        overflow: hidden;
-        white-space: nowrap;
-      }
-      .marquee-content {
-        display: inline-block;
-        animation: marquee 20s linear infinite;
-      }
-      @keyframes marquee {
-        from { transform: translateX(0); }
-        to { transform: translateX(-50%); }
-      }
-      canvas {
-        pointer-events: none;
+      .nav-blur {
+        backdrop-filter: blur(10px);
+        background: rgba(0, 71, 255, 0.5);
       }
     </style>
   <script type="importmap">
@@ -72,6 +86,7 @@
 </script>
 </head>
   <body>
+    <div class="scanline"></div>
     <div id="root"></div>
   </body>
 </html>

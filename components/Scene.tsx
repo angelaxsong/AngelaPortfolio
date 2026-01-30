@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Float, Sphere, MeshDistortMaterial, Environment, MeshTransmissionMaterial } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
+import { MeshTransmissionMaterial, Environment, Box } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface SceneProps {
@@ -9,93 +9,63 @@ interface SceneProps {
 }
 
 export const Scene: React.FC<SceneProps> = ({ mousePos }) => {
-  const groupRef = useRef<THREE.Group>(null);
-  const characterRef = useRef<THREE.Group>(null);
+  const cubeRef = useRef<THREE.Mesh>(null);
+  const { viewport } = useThree();
+  
+  // Calculate size to be exactly 1/16 of the viewport width
+  // viewport.width is the units available horizontally at the camera distance
+  const cubeSize = viewport.width / 16;
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-    if (groupRef.current) {
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mousePos.x * 0.3, 0.05);
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -mousePos.y * 0.2, 0.05);
-    }
-    if (characterRef.current) {
-      characterRef.current.position.y = Math.sin(t * 0.5) * 0.2;
+    if (cubeRef.current) {
+      // Subtle hovering animation
+      cubeRef.current.position.y = Math.sin(t * 0.4) * 0.15;
+      
+      // Mouse interaction + continuous rotation
+      const targetRotationX = -mousePos.y * 0.6 + t * 0.1;
+      const targetRotationY = mousePos.x * 0.6 + t * 0.12;
+      
+      cubeRef.current.rotation.x = THREE.MathUtils.lerp(cubeRef.current.rotation.x, targetRotationX, 0.06);
+      cubeRef.current.rotation.y = THREE.MathUtils.lerp(cubeRef.current.rotation.y, targetRotationY, 0.06);
+      cubeRef.current.rotation.z = THREE.MathUtils.lerp(cubeRef.current.rotation.z, t * 0.05, 0.06);
     }
   });
 
   return (
     <>
       <color attach="background" args={['#0047FF']} />
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={2} color="#ffffff" />
-      <spotLight position={[-10, 20, 10]} angle={0.2} penumbra={1} intensity={3} castShadow />
+      
+      <ambientLight intensity={0.4} />
+      <pointLight position={[5, 5, 5]} intensity={1.5} />
+      <spotLight position={[0, 10, 0]} intensity={1} angle={0.5} penumbra={1} />
       
       <Environment preset="city" />
 
-      <group ref={groupRef}>
-        {/* Main Character Placeholder (Chrome Wizard Figure) */}
-        <group ref={characterRef} position={[2, 0, 0]} scale={1.5}>
-          {/* Head */}
-          <Sphere args={[0.4, 32, 32]} position={[0, 0.8, 0]}>
-            <meshStandardMaterial color="#ffffff" metalness={1} roughness={0.05} />
-          </Sphere>
-          
-          {/* Wizard Hat (Cone) */}
-          <mesh position={[0, 1.4, 0]} rotation={[0.1, 0, 0.1]}>
-            <coneGeometry args={[0.3, 0.8, 32]} />
-            <meshStandardMaterial color="#ffffff" metalness={1} roughness={0.1} />
-          </mesh>
+      {/* The Single Signature Dverso Cube */}
+      <Box ref={cubeRef} args={[cubeSize, cubeSize, cubeSize]}>
+        <MeshTransmissionMaterial
+          backside
+          samples={16}
+          thickness={cubeSize * 0.8}
+          chromaticAberration={0.12}
+          anisotropy={0.2}
+          distortion={0.1}
+          distortionScale={0.2}
+          temporalDistortion={0.05}
+          clearcoat={1}
+          clearcoatRoughness={0}
+          attenuationDistance={1.2}
+          attenuationColor="#ffffff"
+          color="#ffffff"
+          ior={1.45}
+          transmission={1}
+        />
+      </Box>
 
-          {/* Dress/Body (Distorted Sphere for fabric look) */}
-          <Float speed={4} rotationIntensity={0.5} floatIntensity={1}>
-            <Sphere args={[0.7, 64, 64]} position={[0, 0, 0]} scale={[1, 1.2, 1]}>
-              <MeshDistortMaterial
-                color="#ffffff"
-                speed={2}
-                distort={0.3}
-                radius={1}
-                metalness={1}
-                roughness={0.1}
-              />
-            </Sphere>
-          </Float>
-
-          {/* Wand with Star */}
-          <group position={[-0.6, 0.2, 0.3]} rotation={[0, 0, 0.5]}>
-            <mesh>
-              <cylinderGeometry args={[0.02, 0.02, 0.8]} />
-              <meshStandardMaterial color="#ffffff" metalness={1} />
-            </mesh>
-            <mesh position={[0, 0.45, 0]}>
-              <octahedronGeometry args={[0.1, 0]} />
-              <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2} />
-            </mesh>
-          </group>
-        </group>
-
-        {/* Floating Geometric Elements */}
-        {Array.from({ length: 15 }).map((_, i) => (
-          <Float
-            key={i}
-            speed={Math.random() * 2 + 1}
-            rotationIntensity={Math.random() * 5}
-            floatIntensity={Math.random() * 2}
-          >
-            <mesh position={[
-              (Math.random() - 0.5) * 15,
-              (Math.random() - 0.5) * 10,
-              (Math.random() - 0.5) * 10
-            ]}>
-              <icosahedronGeometry args={[Math.random() * 0.2, 0]} />
-              <meshStandardMaterial color="#ffffff" metalness={1} roughness={0.1} wireframe={Math.random() > 0.5} />
-            </mesh>
-          </Float>
-        ))}
-      </group>
-
-      {/* Grid floor for depth */}
-      <gridHelper args={[50, 50, '#ffffff', '#ffffff']} position={[0, -5, 0]} rotation={[0, 0, 0]}>
-        <meshStandardMaterial opacity={0.1} transparent />
+      {/* Perspective Grid Floor */}
+      <gridHelper args={[100, 80, '#ffffff', '#ffffff']} position={[0, -6, 0]}>
+        <meshStandardMaterial opacity={0.04} transparent />
       </gridHelper>
     </>
   );
