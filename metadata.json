@@ -1,0 +1,7 @@
+{
+  "name": "Dverso Studio Clone",
+  "description": "A high-performance, immersive portfolio site inspired by dversostudio.io, featuring Three.js 3D scenes, pixelated typography, and a vibrant blue aesthetic.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
