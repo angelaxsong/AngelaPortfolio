@@ -20,14 +20,34 @@ const App: React.FC = () => {
       });
     };
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
+
+  const handleCreated = () => {
+    // Reveal the app once core Three.js systems are ready to render
+    requestAnimationFrame(() => {
+      document.getElementById('root')?.classList.add('loaded');
+    });
+  };
 
   return (
     <div className="relative min-h-screen w-full select-none bg-[#0047FF]">
       {/* 3D Background layer */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 10], fov: 35 }} dpr={[1, 2]}>
+        <Canvas 
+          camera={{ position: [0, 0, 10], fov: 35 }} 
+          dpr={[1, 2]}
+          onCreated={handleCreated}
+          gl={{ 
+            antialias: true, 
+            alpha: false,
+            powerPreference: "high-performance",
+            stencil: false,
+            depth: true
+          }}
+        >
           <Suspense fallback={null}>
             <Scene mousePos={mousePos} />
           </Suspense>
@@ -45,10 +65,10 @@ const App: React.FC = () => {
           <section className="mt-32 pb-32">
             <div className="mb-16 flex items-end justify-between border-b border-white/20 pb-4">
               <h2 className="pixel-font text-5xl md:text-8xl uppercase leading-tight tracking-tighter">
-                WORK <span className="text-[0.4em] font-sans align-middle opacity-30 font-bold ml-4 tracking-[0.2em]">[2023-2025]</span>
+                WORK LOG ↗
               </h2>
               <div className="text-[10px] font-bold opacity-40 uppercase tracking-[0.3em] hidden md:block">
-                Curated Selection of 3D Experiments
+                AI Product Systems · Shipped at Scale
               </div>
             </div>
             <ProjectList />

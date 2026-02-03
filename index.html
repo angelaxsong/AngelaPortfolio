@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background-color: #0047FF;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DVERSO STUDIO | Creative Technology & 3D Experiences</title>
+    <title>ANGELA SONG | AI Product Designer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,14 +13,22 @@
       :root {
         --dverso-blue: #0047FF;
       }
-      body {
+      html, body {
         margin: 0;
+        padding: 0;
         background-color: var(--dverso-blue);
         color: white;
         font-family: 'JetBrains Mono', monospace;
         overflow-x: hidden;
         cursor: crosshair;
         -webkit-font-smoothing: antialiased;
+      }
+      #root {
+        opacity: 0;
+        transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      #root.loaded {
+        opacity: 1;
       }
       .pixel-font {
         font-family: 'Silkscreen', cursive;
@@ -53,6 +61,7 @@
         position: fixed;
         bottom: 100%;
         animation: scanline 8s linear infinite;
+        pointer-events: none;
       }
       @keyframes scanline {
         0% { bottom: 100%; }
@@ -75,12 +84,14 @@
   <script type="importmap">
 {
   "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "three": "https://esm.sh/three@0.173.0",
+    "@react-three/fiber": "https://esm.sh/@react-three/fiber@9.0.4?external=three,react,react-dom",
+    "@react-three/drei": "https://esm.sh/@react-three/drei@10.0.3?external=three,react,react-dom,@react-three/fiber",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "@react-three/fiber": "https://esm.sh/@react-three/fiber@^9.5.0",
-    "three": "https://esm.sh/three@^0.182.0",
-    "@react-three/drei": "https://esm.sh/@react-three/drei@^10.7.7"
+    "react/": "https://esm.sh/react@^19.2.4/"
   }
 }
 </script>

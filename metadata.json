@@ -1,7 +1,5 @@
 {
-  "name": "New3DscensPortfolio",
-  "description": "A high-performance, immersive portfolio site inspired by dversostudio.io, featuring Three.js 3D scenes, pixelated typography, and a vibrant blue aesthetic.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "name": "AngelaPortfolio",
+  "description": "A high-performance, immersive portfolio site inspired by modern 3D design aesthetics, featuring Three.js 3D scenes, pixelated typography, and a vibrant blue aesthetic.",
+  "requestFramePermissions": []
 }
